@@ -7,6 +7,9 @@ import sys
 import copy
 import pygame
 
+# ゲームのタイトル
+title : str = 'My Game'
+
 ##################### 定数 #####################
 
 # 広さ
@@ -19,12 +22,13 @@ margin : int = 5   # マスの間隔
 width : int = rows * length + rows * margin
 height : int = lines * length + lines * margin
 
-# 色
-color_t = color.Color_t
-white = color.white
-red = color.red
-
 ##################### 型定義 #####################
+
+# 色を表す型
+color_t = color.Color_t
+
+# 画像を表す型
+image_t = image.Image_t
 
 # １マスを表す型
 cell_t = TypeVar ("cell_t", bound="Cell_t")
@@ -55,15 +59,15 @@ class World_t:
         self.score = score
         self.message = message
 
-# 世界の型
+# 世界を創る
 class Universe_t:
     def __init__(self,
         name : str,
         width : int,
         height : int,
-        to_draw : None,
+        to_draw : image_t,
         on_key : None,
-        stop_when : None,
+        stop_when : bool,
         ):
         self.name = name
         self.width = width
@@ -72,10 +76,15 @@ class Universe_t:
         self.on_key = on_key
         self.stop_when = stop_when
 
+##################### 色  #####################
+
+# 色
+white = color.white
+red = color.red
+
 ##################### 画像  #####################
 
 # 画像
-image_t = image.Image_t
 background : image_t = image_t.empty_scene (width, height)
 
 ##################### 初期値  #####################
@@ -93,12 +102,12 @@ def Make_initial_cells (x : int, y : int) -> List[Cell_t]:
         return [Cell_t ((x, y), 2, False)] + Make_initial_cells (x, y + 1)
 
 # 世界の初期値
-def Initial_world () -> World_t:
-    return World_t (Make_initial_cells (1, 1), 0, "")
+initial_world : World_t = World_t (Make_initial_cells (1, 1), 0, "")
 
 ##################### マス処理  #####################
 
 # マスを受け取ってきてその画像を返す
+# TODO: マスの値(value)によって色を変えた方が良い
 def cell_to_image (cell : Cell_t) -> image_t:
     if cell.value == 0:
         return image_t.empty_scene (length, length)
@@ -124,5 +133,9 @@ def draw(world : World_t) -> image_t:
 
 ##################### 開始・終了  #####################
 
+# ゲームの終了条件 (未定)
 def Stop_when (world : World_t) -> bool:
     return False
+
+# 世界を創る
+big_bang : Universe_t = Universe_t (title, width, height, draw(initial_world), None, False)
