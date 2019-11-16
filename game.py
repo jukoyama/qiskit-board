@@ -13,13 +13,13 @@ title : str = 'My Game'
 ##################### 定数 #####################
 
 # 広さ
-lines  : int = 4 # 上下の列数
-rows   : int = 4 # 左右の列数
+lines  : int = 4   # 上下の列数
+rows   : int = 4   # 左右の列数
 length : int = 125 # １マスの辺の長さ
 margin : int = 5   # マスの間隔
 
 # ゲーム画面の広さ
-width : int = rows * length + rows * margin
+width  : int = rows * length + rows * margin
 height : int = lines * length + lines * margin
 
 ##################### 型定義 #####################
@@ -36,9 +36,9 @@ cell_t = TypeVar ("cell_t", bound="Cell_t")
 class Cell_t:
     def __init__(self,
             pos : Tuple[int, int], # 位置
-            #key : int, # マスの量子ビット
-            value : int,
-            #gate : int, # 作用させるゲート
+            #key : int,            # マスの量子ビット
+            value : int,           # マスの値(古典ビット?)
+            #gate : int,           # 作用させるゲート
             moveable : bool) -> cell_t:
         self.pos = pos
         # self.key = key
@@ -62,12 +62,12 @@ class World_t:
 # 世界を創る
 class Universe_t:
     def __init__(self,
-        name : str,
-        width : int,
-        height : int,
-        to_draw : image_t,
-        on_key : None,
-        stop_when : bool,
+        name : str,        # ゲームのタイトル
+        width : int,       # ゲーム画面の横幅
+        height : int,      # ゲーム画面の縦幅
+        to_draw : image_t, # ゲーム画面に表示する画像
+        on_key : None,     # キーボードのイベント処理
+        stop_when : bool,  # ゲーム終了条件
         ):
         self.name = name
         self.width = width
@@ -88,9 +88,6 @@ red = color.red
 background : image_t = image_t.empty_scene (width, height)
 
 ##################### 初期値  #####################
-
-def Make_cell () -> Cell_t:
-    return Cell_t ((10, 10), 2, False)
 
 # マスを作る
 def Make_initial_cells (x : int, y : int) -> List[Cell_t]:
@@ -138,4 +135,4 @@ def Stop_when (world : World_t) -> bool:
     return False
 
 # 世界を創る
-big_bang : Universe_t = Universe_t (title, width, height, draw(initial_world), None, False)
+big_bang : Universe_t = Universe_t (title, width, height, draw(initial_world), None, Stop_when(initial_world))

@@ -9,6 +9,8 @@ BIG_BANG = game.big_bang
 
 WIDTH = BIG_BANG.width
 HEIGHT = BIG_BANG.height
+
+#set up the window
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 SCREEN.fill(game.white)
 
@@ -23,11 +25,16 @@ pygame.display.set_caption('My Game')
 
 pygame.display.flip()
 
-while True: # the main game loop
+is_running = True
+while is_running: # the main game loop
 
     for event in pygame.event.get():
+        print(type(event))
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+
+    if BIG_BANG.stop_when == True:
+        is_running = False
 
     pygame.display.update()
