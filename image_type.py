@@ -25,14 +25,15 @@ class Image_t:
     def circle (width : int, height : int, color: color_t, fill : bool, scene : image_t) -> image_t:
         return pygame.draw.circle(scene, color, (width, height), 20, 0)
 
-    def place_image (image : image_t, posn : Tuple[int, int], background : image_t) -> image_t:
-        return background.blit(image, posn)
-
     def read_image (string : str, width : int, height : int) -> image_t:
-        screen : image_t = pygame.Surface((746,285))
+        screen : image_t = pygame.Surface((width,height))
+        pygame.draw.rect(screen, color.white, (0, 0, width, height))
         image : image_t = pygame.image.load(string)
         screen.blit(image, (0,0))
         return screen
+
+    def place_image (image : image_t, posn : Tuple[int, int], background : image_t) -> image_t:
+        return background.blit(image, posn)
 
     def place_images (images: List[image_t], poss: List[Tuple[int, int]], background: image_t) -> image_t:
         if images == [] and poss == []:

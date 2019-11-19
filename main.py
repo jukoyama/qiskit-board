@@ -33,6 +33,14 @@ while is_running: # the main game loop
             pygame.quit()
             sys.exit()
 
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_h:
+                print("H gate!")
+            elif event.key == pygame.K_x:
+                print("X gate!")
+            elif event.key == pygame.K_c:
+                print("C gate!")
+
     if BIG_BANG.stop_when == True:
         is_running = False
 

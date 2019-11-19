@@ -53,10 +53,12 @@ class Prob_t:
     def __init__(self,
         pos : Tuple[int, int],   # 位置
         siki : image_t,
+        ans : str
         #prob_cell : List[Cell_t] # 空欄になっているマス
         ) -> prob_t:
         self.pos = pos
         self.siki = siki
+        self.ans = ans
         # self.prob_cell = prob_cell
 
 # Circuit を表す型
@@ -115,20 +117,21 @@ black = color.black
 
 # 画像
 background : image_t = image_t.empty_scene (width, height)
-siki1 : image_t = None
-zu1 : image_t = image_t.read_image('sample.png', 746, 285)
+siki1 : image_t = image_t.read_image('sample1.png', 1000, 300)
+zu1 : image_t = image_t.read_image('q1_c.png', 1000, 300)
 
-##################### 問題  #####################
+##################### キーボード処理  #####################
 
-# 問題１ ?|0> = |1>
-# def Make_Prob_1 () -> :
-
+def on_key (key : str, world : World_t) -> bool:
+    prob : Prob_t = world.prob
+    if key == prob.ans : True
+    else : False
 
 ##################### 初期値  #####################
 
 # 問題のマスを創る
 def Make_initial_probcell (x : int , y : int) -> Prob_t:
-    return Prob_t ((x,y), siki1)
+    return Prob_t ((x,y), siki1, False)
 
 # 回路のマスを創る
 def Make_initial_circuitcell (x : int, y : int) -> Circuit_t:
@@ -174,9 +177,9 @@ def draw_with_bg (world : World_t, bg : image_t) -> image_t:
     problem : Prob_t = world.prob
     circuit : Circuit_t = world.circ
     def images() -> List[image_t]:
-        return [prob_area_to_image (problem), circ_area_to_image (circuit), circuit.zu]
+        return [prob_area_to_image (problem), circ_area_to_image (circuit), problem.siki, circuit.zu]
     def poss()  -> List[Tuple[int, int]]:
-        return [world.prob.pos, world.circ.pos, world.prob.pos]
+        return [world.prob.pos, world.circ.pos, world.prob.pos, world.circ.pos]
     return image_t.place_images (images(), poss(), bg)
 
 # 問題の画像と回路の画像を統合させる
