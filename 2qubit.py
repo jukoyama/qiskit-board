@@ -6,7 +6,7 @@ def kekka (key : str) -> bool:
         backend = BasicAer.get_backend('statevector_simulator')
 
         # Create a Quantum Circuit acting on the q register
-        circuit = QuantumCircuit(1, 1)
+        circuit = QuantumCircuit(2, 2)
 
         # Add a H gate on qubit 0
         if key == "h":
@@ -16,7 +16,7 @@ def kekka (key : str) -> bool:
             print("yout input is xgate")
             circuit.x(0)
         elif key == "cx":
-            print("your input is cgate")
+            print("your input is cxgate")
             circuit.h(0)
         else :
             print("your input is unacceptable gate")
