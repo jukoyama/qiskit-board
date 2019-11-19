@@ -1,6 +1,8 @@
 import color_type as color
 import image_type as image
 
+import keisan
+
 from typing import List,Dict,Tuple,Optional,Union,TypeVar,ClassVar,Generic,Sequence
 import numpy as np
 import sys
@@ -20,7 +22,7 @@ margin : int = 5   # マスの間隔
 
 # ゲーム画面の広さ
 width  : int = 1000
-height : int = 600
+height : int = 559
 
 ##################### 型定義 #####################
 
@@ -96,7 +98,7 @@ class Universe_t:
         width : int,       # ゲーム画面の横幅
         height : int,      # ゲーム画面の縦幅
         to_draw : image_t, # ゲーム画面に表示する画像
-        on_key : None,     # キーボードのイベント処理
+        #on_key : image_t,     # キーボードのイベント処理
         stop_when : bool,  # ゲーム終了条件
         ):
         self.name = name
@@ -117,21 +119,39 @@ black = color.black
 
 # 画像
 background : image_t = image_t.empty_scene (width, height)
+
+prob_1 : image_t = image_t.read_image('ques1.png', width, height)
+ans_img  = pygame.image.load('ans1.png')
+wrong_img = pygame.image.load('not1.png')
+
+# ans_1 : image_t = image_t.read_image('ans1.png', width, height)
+# wrong_1 : image_t = image_t.read_image('not1.png', width, height)
+
 siki1 : image_t = image_t.read_image('sample1.png', 1000, 300)
 zu1 : image_t = image_t.read_image('q1_c.png', 1000, 300)
 
 ##################### キーボード処理  #####################
 
-def on_key (key : str, world : World_t) -> bool:
-    prob : Prob_t = world.prob
-    if key == prob.ans : True
-    else : False
+def on_key (key : str, world : World_t, bg) -> image_t:
+    bool = keisan.kekka (key)
+    print(bool)
+    display_change(bool, bg)
+    # prob : Prob_t = world.prob
+
+def display_change (b : bool, bg : image_t) -> image_t:
+    if b == True :
+        print("true so display_change!!")
+        return bg.blit(ans_img, (0, 0))
+        # return background
+    else :
+        print("false so display_change!!")
+        return bg.blit(wrong_img, (0, 0))
 
 ##################### 初期値  #####################
 
 # 問題のマスを創る
 def Make_initial_probcell (x : int , y : int) -> Prob_t:
-    return Prob_t ((x,y), siki1, False)
+    return Prob_t ((x,y), siki1, "x")
 
 # 回路のマスを創る
 def Make_initial_circuitcell (x : int, y : int) -> Circuit_t:
@@ -184,7 +204,8 @@ def draw_with_bg (world : World_t, bg : image_t) -> image_t:
 
 # 問題の画像と回路の画像を統合させる
 def draw (world : World_t) -> image_t:
-    return draw_with_bg (world, background)
+    # return draw_with_bg (world, background)
+    return image_t.place_images ([prob_1], [(0,0)], background)
 
 ##################### 開始・終了  #####################
 
@@ -193,4 +214,4 @@ def Stop_when (world : World_t) -> bool:
     return False
 
 # 世界を創る
-big_bang : Universe_t = Universe_t (title, width, height, draw(initial_world), None, Stop_when(initial_world))
+big_bang : Universe_t = Universe_t (title, width, height, draw(initial_world), Stop_when(initial_world))
