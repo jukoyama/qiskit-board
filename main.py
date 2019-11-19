@@ -29,7 +29,6 @@ is_running = True
 while is_running: # the main game loop
 
     for event in pygame.event.get():
-        print(type(event))
         if event.type == QUIT:
             pygame.quit()
             sys.exit()

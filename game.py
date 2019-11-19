@@ -19,8 +19,8 @@ length : int = 125 # １マスの辺の長さ
 margin : int = 5   # マスの間隔
 
 # ゲーム画面の広さ
-width  : int = rows * length + rows * margin
-height : int = lines * length + lines * margin
+width  : int = 1000
+height : int = 600
 
 ##################### 型定義 #####################
 
@@ -46,16 +46,44 @@ class Cell_t:
         # self.gate = gate
         self.moveable = moveable
 
+# 問題のマスを表す型
+prob_t = TypeVar ("prob_t", bound="Prob_t")
+
+class Prob_t:
+    def __init__(self,
+        pos : Tuple[int, int],   # 位置
+        siki : image_t,
+        #prob_cell : List[Cell_t] # 空欄になっているマス
+        ) -> prob_t:
+        self.pos = pos
+        self.siki = siki
+        # self.prob_cell = prob_cell
+
+# Circuit を表す型
+circuit_t = TypeVar ("circuit_t", bound="Circuit_t")
+
+class Circuit_t:
+    def __init__(self,
+        pos : Tuple[int, int],   # 位置
+        zu : image_t,
+        #prob_cell : List[Cell_t] # 空欄になっているマス
+        ) -> circuit_t:
+        self.pos = pos
+        self.zu = zu
+        # self.prob_cell = prob_cell
+
 # ゲームの状態を表す型
 world_t = TypeVar ("world_t", bound="World_t")
 
 class World_t:
     def __init__(self,
-            cells : List[cell_t], # マスのリスト
+            prob : Prob_t,        # 問題
+            circ : Circuit_t,     # 回路
             score : int,          # 点数
             message : str         # エラーメッセージ
             ) -> world_t:
-        self.cells = cells
+        self.prob = prob
+        self.circ = circ
         self.score = score
         self.message = message
 
@@ -81,51 +109,78 @@ class Universe_t:
 # 色
 white = color.white
 red = color.red
+black = color.black
 
 ##################### 画像  #####################
 
 # 画像
 background : image_t = image_t.empty_scene (width, height)
+siki1 : image_t = None
+zu1 : image_t = image_t.read_image('sample.png', 746, 285)
+
+##################### 問題  #####################
+
+# 問題１ ?|0> = |1>
+# def Make_Prob_1 () -> :
+
 
 ##################### 初期値  #####################
 
+# 問題のマスを創る
+def Make_initial_probcell (x : int , y : int) -> Prob_t:
+    return Prob_t ((x,y), siki1)
+
+# 回路のマスを創る
+def Make_initial_circuitcell (x : int, y : int) -> Circuit_t:
+    return Circuit_t ((x,y), zu1)
+
 # マスを作る
-def Make_initial_cells (x : int, y : int) -> List[Cell_t]:
-    if rows < x:
-        return []
-    elif lines < y:
-        return Make_initial_cells (x + 1, 1)
-    else :
-        return [Cell_t ((x, y), 2, False)] + Make_initial_cells (x, y + 1)
+# def Make_initial_cells (x : int, y : int) -> List[Cell_t]:
+#     if rows < x:
+#         return []
+#     elif lines < y:
+#         return Make_initial_cells (x + 1, 1)
+#     else :
+#         return [Cell_t ((x, y), 2, False)] + Make_initial_cells (x, y + 1)
 
 # 世界の初期値
-initial_world : World_t = World_t (Make_initial_cells (1, 1), 0, "")
+initial_world : World_t = World_t (Make_initial_probcell(0,0), Make_initial_circuitcell(0,(height/2)), 0, "")
 
 ##################### マス処理  #####################
 
 # マスを受け取ってきてその画像を返す
-# TODO: マスの値(value)によって色を変えた方が良い
-def cell_to_image (cell : Cell_t) -> image_t:
-    if cell.value == 0:
-        return image_t.empty_scene (length, length)
-    else :
-        return image_t.rectangle (length, length, red, False)
+# def cell_to_image (cell : Cell_t) -> image_t:
+#     if cell.value == 0:
+#         return image_t.empty_scene (length, length)
+#     else :
+#         return image_t.rectangle (length, length, red, False)
+
+# 問題空間を画像にする
+def prob_area_to_image (area : Prob_t) -> image_t:
+    return image_t.rectangle (width, (height / 2), red, False)
+
+# 回路空間を画像にする
+def circ_area_to_image (area : Circuit_t) -> image_t:
+    return image_t.rectangle (width, (height / 2), black, False)
 
 # マスの座標を計算
-def cell_pos (x : int) -> int:
-    return margin * x + length * (x - 1)
+# def cell_pos (x : int) -> int:
+#     return margin * x + length * (x - 1)
 
 ##################### 描画  #####################
 
 # 状態を受け取ってきて、ゲーム画面を返す
 def draw_with_bg (world : World_t, bg : image_t) -> image_t:
+    problem : Prob_t = world.prob
+    circuit : Circuit_t = world.circ
     def images() -> List[image_t]:
-        return list ( map (lambda cell : cell_to_image (cell), world.cells) )
-    def poss() -> List[Tuple[int, int]]:
-        return list ( map (lambda cell : (cell_pos (cell.pos[0]), cell_pos (cell.pos[1])), world.cells) )
+        return [prob_area_to_image (problem), circ_area_to_image (circuit), circuit.zu]
+    def poss()  -> List[Tuple[int, int]]:
+        return [world.prob.pos, world.circ.pos, world.prob.pos]
     return image_t.place_images (images(), poss(), bg)
 
-def draw(world : World_t) -> image_t:
+# 問題の画像と回路の画像を統合させる
+def draw (world : World_t) -> image_t:
     return draw_with_bg (world, background)
 
 ##################### 開始・終了  #####################

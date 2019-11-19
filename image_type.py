@@ -10,7 +10,9 @@ image_t = TypeVar ("image_t", bound="Image_t")
 
 class Image_t:
     def empty_scene (x : int, y : int) -> image_t:
-        return pygame.Surface((x,y))
+        scene : image_t = pygame.Surface((x,y))
+        scene.fill(color.white)
+        return scene
 
     def rectangle (width : int, height : int, color : color_t, fill : bool) -> image_t:
         screen : image_t = pygame.Surface((width,height))
@@ -25,6 +27,12 @@ class Image_t:
 
     def place_image (image : image_t, posn : Tuple[int, int], background : image_t) -> image_t:
         return background.blit(image, posn)
+
+    def read_image (string : str, width : int, height : int) -> image_t:
+        screen : image_t = pygame.Surface((746,285))
+        image : image_t = pygame.image.load(string)
+        screen.blit(image, (0,0))
+        return screen
 
     def place_images (images: List[image_t], poss: List[Tuple[int, int]], background: image_t) -> image_t:
         if images == [] and poss == []:
