@@ -13,18 +13,18 @@
   2. using keyboard
   
   ![IMG_1921](https://user-images.githubusercontent.com/31028690/69210592-9d4c8f00-0b9e-11ea-9ecc-14a55844f9e3.jpg)
-  
+    
   ※ If you don't have the "STREAM DECK" keyboard
-  
-  Use
-  
-   X Gate  -> "x"
-   H Gate  -> "h"
-   CX Gate -> "k" 
-   Next    -> "n"
-   
-   insead.
-   
+    
+  Use  
+    
+   X Gate  -> "x"  
+   H Gate  -> "h"  
+   CX Gate -> "k"  
+   Next    -> "n"  
+     
+   insead.  
+     
  Learn quantumn gate visually and enjoyable!!
 
  
