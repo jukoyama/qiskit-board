@@ -17,10 +17,10 @@ def kekka (key : str) -> bool:
             circuit.x(0)
         elif key == "cx":
             print("your input is cxgate")
-            circuit.h(0)
+            circuit.cx(0,1)
         else :
             print("your input is unacceptable gate")
-            circuit.h(0)
+            return
 
         # Map the quantum measurement to the classical bits
         # circuit.measure(0,0)
@@ -38,8 +38,8 @@ def kekka (key : str) -> bool:
         return outputstate
 
     def isTrue(outputstate):
-        if len(outputstate) == 2 :
-            if outputstate[1] == (1+0.j) :
+        if len(outputstate) == 4 :
+            if outputstate[1] == (0+0.j) and outputstate[1] == (0+0.j):
                 print("Your answer is correct!!")
                 return True
             else :

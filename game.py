@@ -2,6 +2,7 @@ import color_type as color
 import image_type as image
 
 import keisan
+import twoqubit
 
 from typing import List,Dict,Tuple,Optional,Union,TypeVar,ClassVar,Generic,Sequence
 import numpy as np
@@ -55,12 +56,13 @@ class Prob_t:
     def __init__(self,
         pos : Tuple[int, int],   # 位置
         siki : image_t,
-        ans : str
-        #prob_cell : List[Cell_t] # 空欄になっているマス
+        prob1_iscorrect : bool,
+        prob2_iscorrect : bool
         ) -> prob_t:
         self.pos = pos
         self.siki = siki
-        self.ans = ans
+        self.prob1_iscorrect = prob1_iscorrect
+        self.prob2_iscorrect = prob2_iscorrect
         # self.prob_cell = prob_cell
 
 # Circuit を表す型
@@ -120,38 +122,67 @@ black = color.black
 # 画像
 background : image_t = image_t.empty_scene (width, height)
 
-prob_1 : image_t = image_t.read_image('ques1.png', width, height)
-ans_img  = pygame.image.load('ans1.png')
-wrong_img = pygame.image.load('not1.png')
+# 大門１の画像
+prob1_img : image_t = image_t.read_image('Prob1Img/ques1.png', width, height)
+ans1_img   = pygame.image.load('Prob1Img/ans1.png')
+wrong1_img = pygame.image.load('Prob1Img/not1.png')
 
-# ans_1 : image_t = image_t.read_image('ans1.png', width, height)
-# wrong_1 : image_t = image_t.read_image('not1.png', width, height)
+# 大門２の画像
+prob2_img  = pygame.image.load('Prob2Img/ques2.png')
+ans2_img   = pygame.image.load('Prob2Img/ans2.png')
+wrong2_img = pygame.image.load('Prob2Img/not2.png')
 
-siki1 : image_t = image_t.read_image('sample1.png', 1000, 300)
-zu1 : image_t = image_t.read_image('q1_c.png', 1000, 300)
+siki1 : image_t = image_t.read_image('NotUseImg/sample1.png', 1000, 300)
+zu1 : image_t   = image_t.read_image('NotUseImg/q1_c.png', 1000, 300)
 
 ##################### キーボード処理  #####################
 
 def on_key (key : str, world : World_t, bg) -> image_t:
-    bool = keisan.kekka (key)
-    print(bool)
-    display_change(bool, bg)
-    # prob : Prob_t = world.prob
+    prob : Prob_t = world.prob
+    if prob.prob1_iscorrect == False:
+        bool = keisan.kekka (key)
+        print(bool)
+        display_prob1_is_correct_change(bool, bg)
+        prob.prob1_iscorrect = bool
+    elif prob.prob2_iscorrect == False:
+        bool = twoqubit.kekka (key)
+        display_prob2_is_correct_change(bool, bg)
+        prob.prob2_iscorrect = bool
 
-def display_change (b : bool, bg : image_t) -> image_t:
+def display_prob1_is_correct_change (b : bool, bg : image_t) -> image_t:
     if b == True :
         print("true so display_change!!")
-        return bg.blit(ans_img, (0, 0))
+        return bg.blit(ans1_img, (0, 0))
         # return background
     else :
         print("false so display_change!!")
-        return bg.blit(wrong_img, (0, 0))
+        return bg.blit(wrong1_img, (0, 0))
+
+def display_prob2_is_correct_change (b : bool, bg : image_t) -> image_t:
+    if b == True :
+        print("true so display_change!!")
+        return bg.blit(ans2_img, (0, 0))
+        # return background
+    else :
+        print("false so display_change!!")
+        return bg.blit(wrong2_img, (0, 0))
+
+def display_next (world : World_t, bg : image_t) -> image_t:
+    prob : Prob_t = world.prob
+    state : bool = prob.prob1_iscorrect
+    if state :
+        # display next image
+        print("display next")
+        bg.blit(prob2_img, (0, 0))
+    else :
+        # display the former question
+        return bg.blit(prob1_img, (0, 0))
 
 ##################### 初期値  #####################
 
 # 問題のマスを創る
 def Make_initial_probcell (x : int , y : int) -> Prob_t:
-    return Prob_t ((x,y), siki1, "x")
+    return Prob_t ((x,y), siki1, False, False)
 
 # 回路のマスを創る
 def Make_initial_circuitcell (x : int, y : int) -> Circuit_t:
@@ -205,7 +236,7 @@ def draw_with_bg (world : World_t, bg : image_t) -> image_t:
 # 問題の画像と回路の画像を統合させる
 def draw (world : World_t) -> image_t:
     # return draw_with_bg (world, background)
-    return image_t.place_images ([prob_1], [(0,0)], background)
+    return image_t.place_images ([prob1_img], [(0,0)], background)
 
 ##################### 開始・終了  #####################
 

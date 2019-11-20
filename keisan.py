@@ -13,7 +13,7 @@ def kekka (key : str) -> bool:
             print("your input is hgate")
             circuit.h(0)
         elif key == "x":
-            print("yout input is xgate")
+            print("your input is xgate")
             circuit.x(0)
         elif key == "cx":
             print("your input is cgate")
