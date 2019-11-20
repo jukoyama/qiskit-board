@@ -8,6 +8,8 @@ def kekka (key : str) -> bool:
         # Create a Quantum Circuit acting on the q register
         circuit = QuantumCircuit(2, 2)
 
+        circuit.x(0)
+
         # Add a H gate on qubit 0
         if key == "h":
             print("your input is hgate")
@@ -38,8 +40,10 @@ def kekka (key : str) -> bool:
         return outputstate
 
     def isTrue(outputstate):
+        state0 = (0+0.j)
+        state1 = (1+0.j)
         if len(outputstate) == 4 :
-            if outputstate[1] == (0+0.j) and outputstate[1] == (0+0.j):
+            if outputstate[0] == state0 and outputstate[1] == state0 and outputstate[2] == state0 and outputstate[3] == state1:
                 print("Your answer is correct!!")
                 return True
             else :
