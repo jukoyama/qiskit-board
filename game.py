@@ -129,7 +129,7 @@ wrong1_img = pygame.image.load('Prob1Img/not1.png')
 
 # 大門２の画像
 prob2_img  = pygame.image.load('Prob2Img/ques2.png')
-ans2_img   = pygame.image.load('Prob2Img/ans2.png')
+ans2_img   = pygame.image.load('Prob2Img/ans2_2.png')
 wrong2_img = pygame.image.load('Prob2Img/not2.png')
 
 siki1 : image_t = image_t.read_image('NotUseImg/sample1.png', 1000, 300)
