@@ -1,4 +1,4 @@
-# Everyone Quantom
+# Everyone Quantum
 
 ## MinQuan
 
